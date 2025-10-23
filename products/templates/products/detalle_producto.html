@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ producto.nombre }}</title>
+</head>
+<body>
+    <h1>{{ producto.nombre }}</h1>
+    
+    {% if producto.imagen %}
+        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="300">
+    {% endif %}
+    
+    <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+    <p><strong>Stock:</strong> {{ producto.stock }}</p>
+    <p><strong>Descripción:</strong> {{ producto.descripcion }}</p>
+    
+    <div>
+        <a href="{% url 'products:editar' producto.pk %}">Editar</a> |
+        <a href="{% url 'products:borrar' producto.pk %}">Eliminar</a> |
+        <a href="{% url 'products:lista' %}">Volver a la lista</a>
+    </div>
+</body>
+</html>

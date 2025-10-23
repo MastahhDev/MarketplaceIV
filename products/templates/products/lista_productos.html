@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Lista de Productos</h1>
+    
+    <div>
+        <a href="{% url 'products:crear' %}">Agregar Producto</a> |
+        <a href="{% url 'home' %}">Inicio</a>
+    </div>
+    
+    <hr>
+
+    {% if productos %}
+        {% for producto in productos %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+                
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" width="200">
+                {% else %}
+                    <p>[Sin imagen]</p>
+                {% endif %}
+                
+                <h3>{{ producto.nombre }}</h3>
+                <p><strong>Precio:</strong> ${{ producto.precio }}</p>
+                <p><strong>Stock:</strong> {{ producto.stock }}</p>
+                
+                <div>
+                    <a href="{% url 'products:detalle' producto.pk %}">Ver</a> |
+                    <a href="{% url 'products:editar' producto.pk %}">Editar</a> |
+                    <a href="{% url 'products:borrar' producto.pk %}">Eliminar</a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay productos registrados.</p>
+        <a href="{% url 'products:crear' %}">Agregar el primer producto</a>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crear Producto</title>
+</head>
+<body>
+    <h1>CREAR PRODUCTO</h1>
+    
+    <!-- ✅ AGREGA enctype="multipart/form-data" para imágenes -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Nombre: <input type="text" name="nombre" required></p>
+        <p>Precio: <input type="number" name="precio" step="0.01" required></p>
+        <p>Stock: <input type="number" name="stock" required></p>
+        <p>Descripción: <textarea name="descripcion"></textarea></p>
+        
+        <!-- ✅ AGREGA campo para imagen -->
+        <p>Imagen: <input type="file" name="imagen" accept="image/*"></p>
+        
+        <button type="submit">CREAR Producto</button>
+    </form>
+    
+    <a href="{% url 'products:lista' %}">Volver a lista</a>
+</body>
+</html>

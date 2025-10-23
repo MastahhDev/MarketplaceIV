@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Producto</title>
+</head>
+<body>
+    <h1>Editar Producto</h1>
+    
+    
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>Nombre: <input type="text" name="nombre" value="{{ producto.nombre }}" required></p>
+        <p>Precio: <input type="number" name="precio" value="{{ producto.precio }}" step="0.01" required></p>
+        <p>Stock: <input type="number" name="stock" value="{{ producto.stock }}" required></p>
+        <p>Descripción: <textarea name="descripcion">{{ producto.descripcion }}</textarea></p>
+        
+       
+        <p>Imagen: <input type="file" name="imagen" accept="image/*"></p>
+        
+       
+        {% if producto.imagen %}
+            <p>Imagen actual: <img src="{{ producto.imagen.url }}" width="100"></p>
+        {% endif %}
+        
+        <button type="submit">Guardar Cambios</button>
+    </form>
+    
+    <a href="{% url 'products:lista' %}">Cancelar</a>
+</body>
+</html>

@@ -1,7 +1,15 @@
-{% extends 'base.html' %}
-
-{% block content %}
-
 <h1>Productos</h1>
 
-{% endblock %}
+<a href="{% url 'products:crear' %}">+ Nuevo producto</a>
+
+<ul>
+{% for p in productos %}
+    <li>
+        <a href="{% url 'products:detalle' p.pk %}">{{ p.nombre }}</a> - ${{ p.precio }}
+        <a href="{% url 'products:editar' p.pk %}">Editar</a> |
+        <a href="{% url 'products:borrar' p.pk %}">Borrar</a>
+    </li>
+{% empty %}
+    <li>No hay productos.</li>
+{% endfor %}
+</ul>
