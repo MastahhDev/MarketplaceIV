@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="productos-container">
+    <div class="page-header">
+        <h1 class="page-title">Lista de Productos</h1>
+        <div class="header-actions">
+            <a href="{% url 'products:crear' %}" class="btn-custom btn-primary-custom">
+                <i class="fas fa-plus"></i> Agregar Producto
+            </a>
+            <a href="{% url 'home' %}" class="btn-custom btn-secondary-custom">
+                <i class="fas fa-home"></i> Inicio
+            </a>
+        </div>
+    </div>
+
+    {% if productos %}
+    <div class="products-grid">
+        {% for producto in productos %}
+        <div class="product-card">
+            <!-- Imagen del producto -->
+            <div class="product-image">
+                {% if producto.imagen %}
+                    <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" class="product-img">
+                {% else %}
+                    <div class="no-image">
+                        <i class="fas fa-image"></i>
+                        <small>Sin imagen</small>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Información del producto -->
+            <div class="product-info">
+                <h3 class="product-name">{{ producto.nombre }}</h3>
+                {% if producto.marca %}
+                <div class="product-brand">{{ producto.marca }}</div>
+                {% endif %}
+                <div class="product-price">${{ producto.precio }}</div>
+                
+                <div class="product-stock">
+                    <span class="stock-badge {% if producto.stock > 10 %}stock-available{% else %}stock-low{% endif %}">
+                        {% if producto.stock > 10 %}
+                            <i class="fas fa-check-circle"></i> En stock ({{ producto.stock }})
+                        {% else %}
+                            <i class="fas fa-exclamation-triangle"></i> Stock bajo ({{ producto.stock }})
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Acciones -->
+            <div class="product-actions">
+                <a href="{% url 'products:detalle' producto.pk %}" class="action-btn btn-view">
+                    <i class="fas fa-eye"></i> Ver
+                </a>
+                <a href="{% url 'products:editar' producto.pk %}" class="action-btn btn-edit">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="{% url 'products:borrar' producto.pk %}" class="action-btn btn-delete">
+                    <i class="fas fa-trash"></i> Eliminar
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-box-open"></i>
+        </div>
+        <h3 class="empty-title">No hay productos registrados</h3>
+        <p class="empty-text">Comienza agregando tu primer producto al catálogo</p>
+        <a href="{% url 'products:crear' %}" class="btn-custom btn-primary-custom">
+            <i class="fas fa-plus"></i> Agregar el primer producto
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Eliminar Producto{% endblock %}
+{% block content %}
+
+<div class="delete-product-container">
+    <h1>Eliminar Producto</h1>
+
+    <p class="delete-warning">
+        ¿Estás seguro de que quieres eliminar <strong>"{{ producto.nombre }}"</strong>?
+    </p>
+
+    {% if producto.imagen %}
+    <div class="delete-image">
+        <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+    </div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="delete-actions">
+            <button type="submit" class="btn-delete">Sí, eliminar</button>
+            <a href="{% url 'products:lista' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
