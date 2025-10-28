@@ -1,9 +1,20 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseForbidden
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
 from .models import Producto
+from functools import wraps
 
+def usuario_es_creador(view_func):
+    @wraps(view_func)
+    def wrapper(request, pk, *args, **kwargs):
+        producto = get_object_or_404(Producto, pk=pk)
+        if producto.usuario != request.user:
+            return HttpResponseForbidden("No tienes permiso para realizar esta acción.")
+        return view_func(request, pk, *args, **kwargs)
+    return wrapper
 
 def registro(request):
     if request.method == 'GET':
@@ -39,6 +50,7 @@ def signin(request):
             login(request, user)
             return redirect('products:lista')  
 
+@login_required
 def signout(request):
     logout(request)
     return redirect('home')
@@ -48,6 +60,7 @@ def lista_productos(request):
     productos = Producto.objects.all()
     return render(request, 'products/lista_productos.html', {'productos': productos})
 
+@login_required
 def crear_producto(request):
     if request.method == 'POST':
         
@@ -55,7 +68,8 @@ def crear_producto(request):
             nombre=request.POST.get('nombre'),
             precio=request.POST.get('precio'),
             descripcion=request.POST.get('descripcion'),
-            stock=request.POST.get('stock')
+            stock=request.POST.get('stock'),
+            usuario=request.user  # 👈 NUEVO: Asignar el usuario actual
         )
         
         
@@ -66,15 +80,16 @@ def crear_producto(request):
         return redirect('products:lista')
     
     return render(request, 'products/crear_producto.html')
-    
-    return render(request, 'products/crear_producto.html')
 
 def detalle_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     return render(request, 'products/detalle_producto.html', {'producto': producto})
 
+@login_required
+@usuario_es_creador
 def editar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
+    
     if request.method == 'POST':
         producto.nombre = request.POST.get('nombre')
         producto.precio = request.POST.get('precio')
@@ -92,6 +107,8 @@ def editar_producto(request, pk):
     
     return render(request, 'products/editar_producto.html', {'producto': producto})
 
+@login_required
+@usuario_es_creador
 def eliminar_producto(request, pk):
     producto = get_object_or_404(Producto, pk=pk)
     if request.method == 'POST':

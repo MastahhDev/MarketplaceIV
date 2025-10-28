@@ -15,8 +15,14 @@
     </div>
 
     <div class="product-actions">
-        <a href="{% url 'products:editar' producto.pk %}">Editar</a>
-        <a href="{% url 'products:borrar' producto.pk %}">Eliminar</a>
+        {% if producto.usuario == request.user %}
+            <a href="{% url 'products:editar' producto.pk %}" class="action-btn btn-edit">
+                <i class="fas fa-edit"></i> Editar
+            </a>
+            <a href="{% url 'products:borrar' producto.pk %}" class="action-btn btn-delete">
+                <i class="fas fa-trash"></i> Eliminar
+            </a>
+        {% endif %} 
         <a href="{% url 'products:lista' %}">Volver</a>
     </div>
 </div>
